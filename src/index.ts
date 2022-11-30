@@ -4,12 +4,13 @@ import express from "express";
 import router from "./router";
 import bodyParser from "body-parser";
 import cors from "cors";
-console.log(router);
+import multer from "multer";
 
 const app = express();
 
 import categories from "./models/categories";
-app.use(bodyParser.json({ type: "*/*" }));
+
+// app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
 // const category =
 new categories({
   name: "cat1",
@@ -18,7 +19,39 @@ let corsOptions = {
   origin: "http://localhost:3000",
   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
+
+// const upload = multer({ dest: "uploads/" });
+const fileStorage = multer.diskStorage({
+  destination: (_, __, cb) => {
+    cb(null, "public/images");
+  },
+  filename: (_, file, cb) => {
+    cb(null, "asdsad" + "-" + file.originalname);
+  },
+});
+
+const fileFilter = (_: any, file: any, cb: any) => {
+  if (
+    file.mimetype === "image/png" ||
+    file.mimetype === "image/jpg" ||
+    file.mimetype === "image/jpeg"
+  ) {
+    cb(null, true);
+  }
+  cb(null, false);
+};
+
+app.use(bodyParser.json());
+app.use(
+  multer({ storage: fileStorage, fileFilter: fileFilter }).single("image")
+);
+
 app.use(cors(corsOptions));
+
+app.post("/image", (req: any, _: any) => {
+  console.log(req.file);
+  // res.send("");
+});
 router(app);
 
 mongoose

@@ -30,6 +30,13 @@ export default function (app: any) {
     });
   });
 
+  app.post("/image1", (req: any, res: any) => {
+    console.log(req.body);
+
+    console.log(req.file);
+    res.send("");
+  });
+
   app.post("/signin", requireSignin, signin); // note when going
 
   app.post("/signup", signup);
