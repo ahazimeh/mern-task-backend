@@ -1,19 +1,26 @@
 // const mongoose = require('mongoose');
 import mongoose from "mongoose";
 import express from "express";
+import router from "./router";
+import bodyParser from "body-parser";
+console.log(router);
+
 const app = express();
 
 import categories from "./models/categories";
-const category = new categories({
+app.use(bodyParser.json({ type: "*/*" }));
+// const category =
+new categories({
   name: "cat1",
 });
+router(app);
 
 mongoose
   .connect(
     `mongodb+srv://ali:_StrongPassword@cluster0.gogkueu.mongodb.net/Restaurant?retryWrites=true&w=majority`
   )
-  .then((result) => {
-    app.listen(3000);
+  .then((_) => {
+    app.listen(8000);
   })
   .catch((err) => {
     console.log(err);
