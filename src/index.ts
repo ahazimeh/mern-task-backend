@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import express from "express";
 import router from "./router";
 import bodyParser from "body-parser";
+import cors from "cors";
 console.log(router);
 
 const app = express();
@@ -13,6 +14,11 @@ app.use(bodyParser.json({ type: "*/*" }));
 new categories({
   name: "cat1",
 });
+let corsOptions = {
+  origin: "http://localhost:3000",
+  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+app.use(cors(corsOptions));
 router(app);
 
 mongoose

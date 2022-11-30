@@ -11,6 +11,24 @@ export default function (app: any) {
     console.log(req.user); // thanks to passport we have this property available
     res.send({ hi: "there" });
   });
+  app.get("/categories", function (_: any, res: any) {
+    res.send({
+      categories: [
+        {
+          name: "Platters",
+          items: [
+            {
+              name: "Chicken Platter",
+              description:
+                "4 chicken pieces with our special sauce served with bbq dip and wedges",
+              price: 160000,
+              image: "https://via.placeholder.com/150",
+            },
+          ],
+        },
+      ],
+    });
+  });
 
   app.post("/signin", requireSignin, signin); // note when going
 
