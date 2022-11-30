@@ -1,10 +1,10 @@
 // const mongoose = require('mongoose');
 import mongoose from "mongoose";
-import express from "express";
+import express, { Request, Response } from "express";
 import router from "./router";
 import bodyParser from "body-parser";
 import cors from "cors";
-import multer from "multer";
+import multer, { FileFilterCallback } from "multer";
 
 const app = express();
 
@@ -30,7 +30,11 @@ const fileStorage = multer.diskStorage({
   },
 });
 
-const fileFilter = (_: any, file: any, cb: any) => {
+const fileFilter = (
+  _: Request,
+  file: Express.Multer.File,
+  cb: FileFilterCallback
+) => {
   if (
     file.mimetype === "image/png" ||
     file.mimetype === "image/jpg" ||
@@ -48,7 +52,7 @@ app.use(
 
 app.use(cors(corsOptions));
 
-app.post("/image", (req: any, _: any) => {
+app.post("/image", (req: Request, _: Response) => {
   console.log(req.file);
   // res.send("");
 });

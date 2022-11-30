@@ -5,20 +5,21 @@ const JwtStrategy = require("passport-jwt").Strategy;
 const ExtractJwt = require("passport-jwt").ExtractJwt;
 // import LocalStrategy from "passport-local";
 import { Strategy as LocalStrategy } from "passport-local";
+import { VerifiedCallback } from "passport-jwt";
 // import * as passportLocal from "passport-local";
 // const LocalStrategy = passportLocal.Strategy;
 
 // Create local strategy
 const localOptions = { usernameField: "email" }; // because by default the field is called username
 const localLogin = new LocalStrategy(localOptions, function (
-  email: any,
-  password: any,
-  done: any
+  email,
+  password,
+  done
 ) {
   // Verify this email and password, call done with the user
   // if it is the correct email and password
   // otherwise, call done with false
-  User.findOne({ email }, function (err: any, user: any) {
+  User.findOne({ email }, function (err: Error, user: typeof User) {
     if (err) {
       return done(err);
     }
@@ -27,7 +28,7 @@ const localLogin = new LocalStrategy(localOptions, function (
     }
 
     // compare passwords - is `password` equal to user.password?
-    user.comparePassword(password, function (err: any, isMatch: any) {
+    user.comparePassword(password, function (err: Error, isMatch: boolean) {
       if (err) {
         return done(err);
       }
@@ -44,16 +45,18 @@ const jwtOptions = {
   jwtFromRequest: ExtractJwt.fromHeader("authorization"),
   secretOrKey: config.secret,
 };
-
+interface Payload {
+  sub: string;
+}
 // Create JWT strategy
 const jwtLogin = new JwtStrategy(jwtOptions, function (
-  payload: any,
-  done: any
+  payload: Payload,
+  done: VerifiedCallback
 ) {
   // See if the user ID in the payload exists in our database
   // If it does, call 'done' with that user
   // otherwise, call done without a user object
-  User.findById(payload.sub, function (err: any, user: any) {
+  User.findById(payload.sub, function (err: Error, user: typeof User) {
     if (err) {
       return done(err, false);
     }
