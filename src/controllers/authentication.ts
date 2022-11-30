@@ -56,4 +56,5 @@ export const signup = function (
       res.json({ token: tokenForUser(user) });
     });
   });
+  return next();
 };
