@@ -5,7 +5,7 @@ import router from "./router";
 import bodyParser from "body-parser";
 import cors from "cors";
 import multer, { FileFilterCallback } from "multer";
-
+import { v4 as uuidv4 } from "uuid";
 const app = express();
 
 import categories from "./models/categories";
@@ -26,7 +26,7 @@ const fileStorage = multer.diskStorage({
     cb(null, "public/images");
   },
   filename: (_, file, cb) => {
-    cb(null, "asdsad" + "-" + file.originalname);
+    cb(null, uuidv4() + "-" + file.originalname);
   },
 });
 
