@@ -1,6 +1,8 @@
+import { NextFunction } from "express";
+
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const bcrypt = require("bcrypt-nodejs");
+import bcrypt from "bcrypt-nodejs";
 
 const userSchema = new Schema({
   email: { type: String, unique: true, lowercase: true },
@@ -10,16 +12,16 @@ const userSchema = new Schema({
 // On Save Hook, encrypt password
 // Before saving a model, run this function
 
-userSchema.pre("save", function (next: any) {
+userSchema.pre("save", function (next: NextFunction) {
   // @ts-ignore
   const user = this;
 
-  bcrypt.genSalt(10, function (err: any, salt: any) {
+  bcrypt.genSalt(10, function (err: Error, salt: string) {
     if (err) {
       return next(err);
     }
 
-    bcrypt.hash(user.password, salt, null, function (err: any, hash: any) {
+    bcrypt.hash(user.password, salt, null, function (err: Error, hash: string) {
       if (err) {
         return next(err);
       }
@@ -29,14 +31,16 @@ userSchema.pre("save", function (next: any) {
   });
 });
 
+type MyCallback = (arg1: Error | null, arg2?: boolean) => void;
+
 userSchema.methods.comparePassword = function (
-  candidatePassword: any,
-  callback: any
+  candidatePassword: string,
+  callback: MyCallback
 ) {
   bcrypt.compare(
     candidatePassword,
     this.password,
-    function (err: any, isMatch: any) {
+    function (err: Error, isMatch: boolean) {
       if (err) {
         return callback(err);
       }
