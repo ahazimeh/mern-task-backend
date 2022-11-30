@@ -1,6 +1,6 @@
 // const mongoose = require('mongoose');
 import mongoose from "mongoose";
-import express, { Request, Response } from "express";
+import express, { Request } from "express";
 import router from "./router";
 import bodyParser from "body-parser";
 import cors from "cors";
@@ -52,10 +52,6 @@ app.use(
 
 app.use(cors(corsOptions));
 
-app.post("/image", (req: Request, _: Response) => {
-  console.log(req.file);
-  // res.send("");
-});
 router(app);
 
 mongoose

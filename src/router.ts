@@ -5,6 +5,7 @@ import passport from "passport";
 
 import * as core from "express-serve-static-core";
 import { Request, Response } from "express";
+import categories from "./models/categories";
 const requireAuth = passport.authenticate("jwt", { session: false });
 const requireSignin = passport.authenticate("local", { session: false });
 
@@ -33,9 +34,16 @@ export default function (app: core.Express) {
   });
 
   app.post("/image", (req: any, res: any) => {
-    console.log(req.body);
+    console.log("aaaa");
 
-    console.log(req.file);
+    console.log(req.body.name);
+
+    console.log(req.file.filename);
+    const category = new categories({
+      name: req.body.name,
+      image: req.file.filename,
+    });
+    category.save();
     res.send("");
   });
 
