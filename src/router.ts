@@ -3,15 +3,17 @@ import { signin, signup } from "./controllers/authentication";
 require("./services/passport");
 import passport from "passport";
 
+import * as core from "express-serve-static-core";
+import { Request, Response } from "express";
 const requireAuth = passport.authenticate("jwt", { session: false });
 const requireSignin = passport.authenticate("local", { session: false });
 
-export default function (app: any) {
-  app.get("/", requireAuth, function (req: any, res: any) {
+export default function (app: core.Express) {
+  app.get("/", requireAuth, function (req: Request, res: Response) {
     console.log(req.user); // thanks to passport we have this property available
     res.send({ hi: "there" });
   });
-  app.get("/categories", function (_: any, res: any) {
+  app.get("/categories", function (_: Request, res: Response) {
     res.send({
       categories: [
         {
@@ -30,7 +32,7 @@ export default function (app: any) {
     });
   });
 
-  app.post("/image1", (req: any, res: any) => {
+  app.post("/image", (req: any, res: any) => {
     console.log(req.body);
 
     console.log(req.file);

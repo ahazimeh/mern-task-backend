@@ -4,21 +4,24 @@
 import jwt from "jwt-simple";
 import User from "../models/users";
 import config from "../config";
+import { NextFunction, Request, Response } from "express";
 
-function tokenForUser(user: any) {
+function tokenForUser(user: typeof User) {
   const timestamp = new Date().getTime();
   return jwt.encode({ sub: user.id, iat: timestamp }, config.secret);
 }
 
-export const signin = function (req: any, res: any) {
+export const signin = function (req: Request, res: Response) {
   // User has already had their email and password auth'd
   // We just need to give them a token
   res.send({ token: tokenForUser(req.user) });
 };
 
-export const signup = function (req: any, res: any, next: any) {
-  console.log("Aaa", req);
-  console.log(req.body);
+export const signup = function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   const email = req.body.email;
   const password = req.body.password;
 
@@ -28,7 +31,7 @@ export const signup = function (req: any, res: any, next: any) {
       .send({ error: "You must provide email and password " });
   }
   // See if a user with a given email exists
-  User.findOne({ email }, function (err: any, existingUser: any) {
+  User.findOne({ email }, function (err: Error, existingUser: typeof User) {
     if (err) {
       return next(err);
     }
@@ -44,7 +47,7 @@ export const signup = function (req: any, res: any, next: any) {
       password,
     });
 
-    user.save(function (err: any) {
+    user.save(function (err: Error) {
       if (err) {
         return next(err);
       }
