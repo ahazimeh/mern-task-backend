@@ -9,8 +9,8 @@ import { Strategy as LocalStrategy } from "passport-local";
 // const LocalStrategy = passportLocal.Strategy;
 
 // Create local strategy
-// const localOptions = { email: "email" }; // because by default the field is called username
-const localLogin = new LocalStrategy(function (
+const localOptions = { usernameField: "email" }; // because by default the field is called username
+const localLogin = new LocalStrategy(localOptions, function (
   email: any,
   password: any,
   done: any
