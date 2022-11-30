@@ -35,7 +35,9 @@ export default function (app: core.Express) {
 
   app.post("/image", (req: any, res: any) => {
     console.log("aaaa");
-
+    categories.findById("6387b001db57d6fbedb41183").then((res: any) => {
+      console.log(res.addToCart(""));
+    });
     console.log(req.body.name);
 
     console.log(req.file.filename);
