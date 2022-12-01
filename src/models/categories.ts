@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+import fs from "fs/promises";
 const Schema = mongoose.Schema;
 
 const menuSchema = new Schema({
@@ -32,6 +32,35 @@ const menuSchema = new Schema({
     },
   ],
 });
+
+menuSchema.methods.updateItem = async function (itemId: any, product: any) {
+  // console.log(product);
+  // console.log(itemId);
+  const items = [...this.items];
+  // console.log(items);
+  let i;
+  for (i = 0; i < items.length; i++) {
+    // @ts-ignore
+    if (items[i]._id.toString() === itemId) {
+      console.log("zzzaaa");
+
+      break;
+    }
+  }
+  if (product.image) {
+    try {
+      await fs.unlink(`public/images/${items[i].image}`);
+    } catch (err) {}
+  }
+  items[i].name = product.name ?? items[i].name;
+  items[i].description = product.description ?? items[i].description;
+  items[i].image = product.image ?? items[i].image;
+  items[i].price = product.price ?? items[i].price;
+  console.log(items[i]);
+
+  this.items = items;
+  return this.save();
+};
 
 menuSchema.methods.addItem = function (product: any) {
   const items = [...this.items];

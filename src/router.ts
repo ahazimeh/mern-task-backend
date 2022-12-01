@@ -60,6 +60,22 @@ export default function (app: core.Express) {
     return validation(category.save(), res);
   });
 
+  app.post("/updateItem/:categoryId/:itemId", async (req: any, res: any) => {
+    const { categoryId, itemId } = req.params;
+    const { itemName, itemDescription, itemPrice } = req.body;
+    const image = req.file?.filename;
+    // console.log(req, res);
+    categories.findById(categoryId).then((_res: any) => {
+      const result = _res.updateItem(itemId, {
+        name: itemName,
+        description: itemDescription,
+        price: !isNaN(+itemPrice) && +itemPrice,
+        image,
+      });
+      return validation(result, res);
+    });
+  });
+
   app.post("/updateCategory/:categoryId", async (req: any, res: any) => {
     const { categoryId } = req.params;
     const name = "asdsad";
