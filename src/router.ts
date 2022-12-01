@@ -65,12 +65,22 @@ export default function (app: core.Express) {
             image,
           });
           // console.log("x", x);
-          return result.catch((_res: any) => {
-            console.log("_res", _res);
+          return result
+            .then(() => {
+              res.json({ message: "true" });
+            })
+            .catch((error: any) => {
+              console.log("_res", error);
+              let errors: any = {};
+              Object.keys(error.errors).forEach((key) => {
+                errors[key] = error.errors[key].message;
+              });
 
-            return res.send(":aaa");
-            console.log("res", res);
-          });
+              return res.status(400).send(errors);
+
+              return res.send(":aaa");
+              console.log("res", res);
+            });
         } catch (err) {
           console.log("ppp", err);
         }
