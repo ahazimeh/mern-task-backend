@@ -54,16 +54,32 @@ export default function (app: core.Express) {
     const { itemName, itemDescription, itemPrice } = req.body;
     const image = req.file?.filename;
 
-    categories.findById(categoryId).then((_res: any) => {
-      _res.addItem({
-        name: itemName,
-        description: itemDescription,
-        price: !isNaN(+itemPrice) && +itemPrice,
-        image,
+    categories
+      .findById(categoryId)
+      .then((_res: any) => {
+        try {
+          const result = _res.addItem({
+            name: itemName,
+            description: itemDescription,
+            price: !isNaN(+itemPrice) && +itemPrice,
+            image,
+          });
+          // console.log("x", x);
+          return result.catch((_res: any) => {
+            console.log("_res", _res);
+
+            return res.send(":aaa");
+            console.log("res", res);
+          });
+        } catch (err) {
+          console.log("ppp", err);
+        }
+        // res.removeFromCart("6387b9b8b7291f5b2183df2f");
+        res.send("");
+      })
+      .catch(() => {
+        res.send("");
       });
-      // res.removeFromCart("6387b9b8b7291f5b2183df2f");
-      res.send("");
-    });
   });
 
   app.post("/addCategory", (req: any, res: any) => {
@@ -71,8 +87,15 @@ export default function (app: core.Express) {
       name: req.body.name,
       image: req.file.filename,
     });
-    category.save();
-    res.send("");
+    category
+      .save()
+      .then(() => {
+        res.send("");
+      })
+      .catch(() => {
+        res.send("");
+      });
+    // res.send("");
   });
 
   app.post("/signin", requireSignin, signin); // note when going

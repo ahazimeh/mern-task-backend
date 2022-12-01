@@ -44,8 +44,7 @@ menuSchema.methods.addItem = function (product: any) {
   });
   this.items = items;
   // this.items.push(product);
-
-  this.save();
+  return this.save();
 };
 menuSchema.methods.removeItem = function (itemId: any) {
   const updatedCartItems = this.items.filter(
