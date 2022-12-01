@@ -6,6 +6,7 @@ import passport from "passport";
 import * as core from "express-serve-static-core";
 import { Request, Response } from "express";
 import categories from "./models/categories";
+import validation from "./helpers/validation";
 const requireAuth = passport.authenticate("jwt", { session: false });
 const requireSignin = passport.authenticate("local", { session: false });
 
@@ -65,22 +66,7 @@ export default function (app: core.Express) {
             image,
           });
           // console.log("x", x);
-          return result
-            .then(() => {
-              res.json({ message: "true" });
-            })
-            .catch((error: any) => {
-              console.log("_res", error);
-              let errors: any = {};
-              Object.keys(error.errors).forEach((key) => {
-                errors[key] = error.errors[key].message;
-              });
-
-              return res.status(400).send(errors);
-
-              return res.send(":aaa");
-              console.log("res", res);
-            });
+          return validation(result, res);
         } catch (err) {
           console.log("ppp", err);
         }
