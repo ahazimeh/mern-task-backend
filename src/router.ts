@@ -45,10 +45,16 @@ export default function (app: core.Express) {
 
   app.post("/addItem/:categoryId", (req, res) => {
     const { categoryId } = req.params;
-    const { categoryName } = req.body;
+    const { itemName, itemDescription, itemPrice } = req.body;
+    const image = req.file?.filename;
 
     categories.findById(categoryId).then((_res: any) => {
-      console.log(_res.addToCart({ name: categoryName }));
+      _res.addItem({
+        name: itemName,
+        description: itemDescription,
+        price: !isNaN(+itemPrice) && +itemPrice,
+        image,
+      });
       // res.removeFromCart("6387b9b8b7291f5b2183df2f");
       res.send("");
     });

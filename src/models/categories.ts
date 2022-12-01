@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
@@ -17,20 +17,14 @@ const menuSchema = new Schema({
         type: String,
         required: true,
       },
-    },
-    {
       description: {
         type: String,
         required: false,
       },
-    },
-    {
       price: {
         type: Number,
         required: false,
       },
-    },
-    {
       image: {
         type: String,
         required: false,
@@ -39,40 +33,19 @@ const menuSchema = new Schema({
   ],
 });
 
-menuSchema.methods.addToCart = function (product: any) {
-  console.log("z");
-
-  console.log(this.items);
-
-  console.log("1");
-
-  console.log(product);
-
+menuSchema.methods.addItem = function (product: any) {
   const items = [...this.items];
+
   items.push({
     name: product.name,
+    description: product.description,
+    image: product.image,
+    price: product.price,
   });
   this.items = items;
+  // this.items.push(product);
+
   this.save();
-  // const cartProductIndex = this.cart.items.findIndex(cp => {
-  //   return cp.productId.toString() === product._id.toString();
-  // });
-  // let newQuantity = 1;
-  // const updatedCartItems = [...this.cart.items];
-  // if (cartProductIndex >= 0) {
-  //   newQuantity = this.cart.items[cartProductIndex].quantity + 1;
-  //   updatedCartItems[cartProductIndex].quantity = newQuantity;
-  // } else {
-  //   updatedCartItems.push({
-  //     productId: product._id,
-  //     quantity: newQuantity
-  //   });
-  // }
-  // const updatedCart = {
-  //   items: updatedCartItems
-  // };
-  // this.cart = updatedCart;
-  // return this.save();
 };
 menuSchema.methods.removeFromCart = function (itemId: any) {
   const updatedCartItems = this.items.filter(
