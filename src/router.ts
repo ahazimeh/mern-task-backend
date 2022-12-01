@@ -15,23 +15,9 @@ export default function (app: core.Express) {
     console.log(req.user); // thanks to passport we have this property available
     res.send({ hi: "there" });
   });
-  app.get("/categories", function (_: Request, res: Response) {
-    res.send({
-      categories: [
-        {
-          name: "Platters",
-          items: [
-            {
-              name: "Chicken Platter",
-              description:
-                "4 chicken pieces with our special sauce served with bbq dip and wedges",
-              price: 160000,
-              image: "https://via.placeholder.com/150",
-            },
-          ],
-        },
-      ],
-    });
+  app.get("/categories", async function (_: Request, res: Response) {
+    const menu = await categories.find();
+    return res.send({ menu });
   });
 
   app.delete("/removeCategory/:categoryId", (req, res) => {
@@ -71,6 +57,10 @@ export default function (app: core.Express) {
       image: req?.file?.filename,
     });
     return validation(category.save(), res);
+  });
+
+  app.post("/updateCategory", (req: any, res: any) => {
+    // console.log(req, res);
   });
 
   app.post("/signin", requireSignin, signin); // note when going
