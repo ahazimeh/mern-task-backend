@@ -33,11 +33,36 @@ export default function (app: core.Express) {
     });
   });
 
+  app.delete("/removeItem/:categoryId/:itemId", (req, res) => {
+    const { categoryId, itemId } = req.params;
+    // Add to cart
+    categories.findById(categoryId).then((_res: any) => {
+      // console.log(res.addToCart());
+      _res.removeFromCart(itemId);
+      res.send("");
+    });
+  });
+
+  app.post("/addItem/:categoryId", (req, res) => {
+    const { categoryId } = req.params;
+    const { categoryName } = req.body;
+
+    categories.findById(categoryId).then((_res: any) => {
+      console.log(_res.addToCart({ name: categoryName }));
+      // res.removeFromCart("6387b9b8b7291f5b2183df2f");
+      res.send("");
+    });
+  });
+
   app.post("/image", (req: any, res: any) => {
     console.log("aaaa");
+    // Add to cart
     categories.findById("6387b001db57d6fbedb41183").then((res: any) => {
       console.log(res.addToCart(""));
+      res.removeFromCart("6387b9b8b7291f5b2183df2f");
     });
+
+    // Remove from cart
     console.log(req.body.name);
 
     console.log(req.file.filename);

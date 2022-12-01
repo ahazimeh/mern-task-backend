@@ -50,7 +50,7 @@ menuSchema.methods.addToCart = function (product: any) {
 
   const items = [...this.items];
   items.push({
-    name: "asd",
+    name: product.name,
   });
   this.items = items;
   this.save();
@@ -74,5 +74,15 @@ menuSchema.methods.addToCart = function (product: any) {
   // this.cart = updatedCart;
   // return this.save();
 };
+menuSchema.methods.removeFromCart = function (itemId: any) {
+  const updatedCartItems = this.items.filter(
+    (item: { _id: { toString: () => any } }) => {
+      return item._id.toString() !== itemId.toString();
+    }
+  );
+  this.items = updatedCartItems;
+  return this.save();
+};
+
 export default mongoose.model("menu", menuSchema);
 // export default categoriesSchema;
