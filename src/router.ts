@@ -59,8 +59,27 @@ export default function (app: core.Express) {
     return validation(category.save(), res);
   });
 
-  app.post("/updateCategory", (req: any, res: any) => {
+  app.post("/updateCategory/:categoryId", async (req: any, res: any) => {
     // console.log(req, res);
+    const { categoryId } = req.params;
+    // const { name } = req.body;
+    const name = "asdsad";
+    const image = req.file?.image;
+
+    categories.findById(categoryId).then((_res: any) => {
+      console.log(_res);
+      _res.image = image ?? _res.image;
+
+      _res.name = name ?? _res.name;
+      _res.save();
+      res.send("");
+    });
+
+    // let doc = await categories.findOneAndUpdate(filter, update, {
+    //   returnOriginal: false,
+    // });
+    // console.log("doc", doc);
+    // return res.send("");
   });
 
   app.post("/signin", requireSignin, signin); // note when going
