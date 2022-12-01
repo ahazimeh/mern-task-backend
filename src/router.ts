@@ -7,6 +7,7 @@ import * as core from "express-serve-static-core";
 import { Request, Response } from "express";
 import categories from "./models/categories";
 import validation from "./helpers/validation";
+import fs from "fs/promises";
 const requireAuth = passport.authenticate("jwt", { session: false });
 const requireSignin = passport.authenticate("local", { session: false });
 
@@ -60,29 +61,32 @@ export default function (app: core.Express) {
   });
 
   app.post("/updateCategory/:categoryId", async (req: any, res: any) => {
-    // console.log(req, res);
     const { categoryId } = req.params;
-    // const { name } = req.body;
     const name = "asdsad";
-    const image = req.file?.image;
+    const image = req.file?.filename;
 
-    categories.findById(categoryId).then((_res: any) => {
-      console.log(_res);
+    categories.findById(categoryId).then(async (_res: any) => {
+      if (image) {
+        try {
+          await fs.unlink(`public/images/${_res.image}`);
+        } catch (err) {}
+      }
       _res.image = image ?? _res.image;
 
       _res.name = name ?? _res.name;
       _res.save();
       res.send("");
     });
-
-    // let doc = await categories.findOneAndUpdate(filter, update, {
-    //   returnOriginal: false,
-    // });
-    // console.log("doc", doc);
-    // return res.send("");
   });
 
   app.post("/signin", requireSignin, signin); // note when going
 
   app.post("/signup", signup);
+  app.post("/test", async () => {
+    try {
+      await fs.unlink(
+        "public/images/44e4ad4b-9af0-44ec-a64e-e2e09affc127-UC-a53897a1-e841-454c-be35-da450b64491e.jpg"
+      );
+    } catch (err) {}
+  });
 }
