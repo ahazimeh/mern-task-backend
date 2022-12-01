@@ -49,7 +49,7 @@ app.use(bodyParser.json());
 app.use(
   multer({ storage: fileStorage, fileFilter: fileFilter }).single("image")
 );
-
+app.use(express.static("public/images"));
 app.use(cors(corsOptions));
 
 router(app);
@@ -59,6 +59,8 @@ mongoose
     `mongodb+srv://ali:_StrongPassword@cluster0.gogkueu.mongodb.net/Restaurant?retryWrites=true&w=majority`
   )
   .then((_) => {
+    console.log("z");
+
     app.listen(8000);
   })
   .catch((err) => {

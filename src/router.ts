@@ -54,18 +54,7 @@ export default function (app: core.Express) {
     });
   });
 
-  app.post("/image", (req: any, res: any) => {
-    console.log("aaaa");
-    // Add to cart
-    categories.findById("6387b001db57d6fbedb41183").then((res: any) => {
-      console.log(res.addToCart(""));
-      res.removeFromCart("6387b9b8b7291f5b2183df2f");
-    });
-
-    // Remove from cart
-    console.log(req.body.name);
-
-    console.log(req.file.filename);
+  app.post("/addCategory", (req: any, res: any) => {
     const category = new categories({
       name: req.body.name,
       image: req.file.filename,
