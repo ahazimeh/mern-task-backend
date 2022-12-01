@@ -47,7 +47,7 @@ menuSchema.methods.addItem = function (product: any) {
 
   this.save();
 };
-menuSchema.methods.removeFromCart = function (itemId: any) {
+menuSchema.methods.removeItem = function (itemId: any) {
   const updatedCartItems = this.items.filter(
     (item: { _id: { toString: () => any } }) => {
       return item._id.toString() !== itemId.toString();

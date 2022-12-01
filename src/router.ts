@@ -33,12 +33,18 @@ export default function (app: core.Express) {
     });
   });
 
+  app.delete("/removeCategory/:categoryId", (req, res) => {
+    const { categoryId } = req.params;
+    categories.remove({ _id: categoryId }).exec();
+    res.send("");
+  });
+
   app.delete("/removeItem/:categoryId/:itemId", (req, res) => {
     const { categoryId, itemId } = req.params;
     // Add to cart
     categories.findById(categoryId).then((_res: any) => {
       // console.log(res.addToCart());
-      _res.removeFromCart(itemId);
+      _res.removeItem(itemId);
       res.send("");
     });
   });
