@@ -42,9 +42,7 @@ export default function (app: core.Express) {
 
   app.delete("/removeItem/:categoryId/:itemId", (req, res) => {
     const { categoryId, itemId } = req.params;
-    // Add to cart
     categories.findById(categoryId).then((_res: any) => {
-      // console.log(res.addToCart());
       _res.removeItem(itemId);
       res.send("");
     });
@@ -55,43 +53,24 @@ export default function (app: core.Express) {
     const { itemName, itemDescription, itemPrice } = req.body;
     const image = req.file?.filename;
 
-    categories
-      .findById(categoryId)
-      .then((_res: any) => {
-        try {
-          const result = _res.addItem({
-            name: itemName,
-            description: itemDescription,
-            price: !isNaN(+itemPrice) && +itemPrice,
-            image,
-          });
-          // console.log("x", x);
-          return validation(result, res);
-        } catch (err) {
-          console.log("ppp", err);
-        }
-        // res.removeFromCart("6387b9b8b7291f5b2183df2f");
-        res.send("");
-      })
-      .catch(() => {
-        res.send("");
+    categories.findById(categoryId).then((_res: any) => {
+      const result = _res.addItem({
+        name: itemName,
+        description: itemDescription,
+        price: !isNaN(+itemPrice) && +itemPrice,
+        image,
       });
+      return validation(result, res);
+    });
   });
 
-  app.post("/addCategory", (req: any, res: any) => {
-    const category = new categories({
+  app.post("/addCategory", async (req: any, res: any) => {
+    let category;
+    category = await new categories({
       name: req.body.name,
-      image: req.file.filename,
+      image: req?.file?.filename,
     });
-    category
-      .save()
-      .then(() => {
-        res.send("");
-      })
-      .catch(() => {
-        res.send("");
-      });
-    // res.send("");
+    return validation(category.save(), res);
   });
 
   app.post("/signin", requireSignin, signin); // note when going

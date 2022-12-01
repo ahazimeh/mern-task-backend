@@ -1,6 +1,7 @@
 import { Response } from "express";
+import { Document } from "mongoose";
 
-const validation = async (result: Promise<void>, res: Response) => {
+const validation = async (result: Promise<Document>, res: Response) => {
   try {
     await result;
     return res.send({ success: true });
