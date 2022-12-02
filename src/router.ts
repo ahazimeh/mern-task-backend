@@ -88,21 +88,26 @@ export default function (app: core.Express) {
 
   app.post("/updateCategory/:categoryId", async (req: any, res: any) => {
     const { categoryId } = req.params;
-    const name = "asdsad";
+    const name = req.body.name;
     const image = req.file?.filename;
 
-    categories.findById(categoryId).then(async (_res: any) => {
-      if (image) {
-        try {
-          await fs.unlink(`public/images/${_res.image}`);
-        } catch (err) {}
-      }
-      _res.image = image ?? _res.image;
+    categories
+      .findById(categoryId)
+      .then(async (_res: any) => {
+        if (image) {
+          try {
+            await fs.unlink(`public/images/${_res.image}`);
+          } catch (err) {}
+        }
+        _res.image = image ?? _res.image;
 
-      _res.name = name ?? _res.name;
-      _res.save();
-      res.send("");
-    });
+        _res.name = name ?? _res.name;
+        _res.save();
+        res.send({ success: true });
+      })
+      .catch(() => {
+        res.json({ success: false });
+      });
   });
 
   app.post("/signin", requireSignin, signin); // note when going
