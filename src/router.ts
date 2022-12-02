@@ -16,10 +16,20 @@ export default function (app: core.Express) {
     console.log(req.user); // thanks to passport we have this property available
     res.send({ hi: "there" });
   });
+
   app.get("/categories", async function (_: Request, res: Response) {
     const menu = await categories.find();
     return res.send({ menu });
   });
+
+  app.get(
+    "/categories/:categoryId",
+    async function (req: Request, res: Response) {
+      const { categoryId } = req.params;
+      const menu = await categories.findById(categoryId);
+      return res.send({ menu });
+    }
+  );
 
   app.delete("/removeCategory/:categoryId", (req, res) => {
     const { categoryId } = req.params;
