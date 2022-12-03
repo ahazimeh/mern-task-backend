@@ -61,7 +61,7 @@ export default function (app: core.Express) {
     });
   });
 
-  app.post("/addCategory", async (req: any, res: any) => {
+  app.post("/addCategory", async (req: Request, res: Response) => {
     let category;
     category = await new categories({
       name: req.body.name,
@@ -70,45 +70,51 @@ export default function (app: core.Express) {
     return validation(category.save(), res);
   });
 
-  app.post("/updateItem/:categoryId/:itemId", async (req: any, res: any) => {
-    const { categoryId, itemId } = req.params;
-    const { itemName, itemDescription, itemPrice } = req.body;
-    const image = req.file?.filename;
-    // console.log(req, res);
-    categories.findById(categoryId).then((_res: any) => {
-      const result = _res.updateItem(itemId, {
-        name: itemName,
-        description: itemDescription,
-        price: !isNaN(+itemPrice) && +itemPrice,
-        image,
+  app.post(
+    "/updateItem/:categoryId/:itemId",
+    async (req: Request, res: Response) => {
+      const { categoryId, itemId } = req.params;
+      const { itemName, itemDescription, itemPrice } = req.body;
+      const image = req.file?.filename;
+      // console.log(req, res);
+      categories.findById(categoryId).then((_res: any) => {
+        const result = _res?.updateItem(itemId, {
+          name: itemName,
+          description: itemDescription,
+          price: !isNaN(+itemPrice) && +itemPrice,
+          image,
+        });
+        return validation(result, res);
       });
-      return validation(result, res);
-    });
-  });
+    }
+  );
 
-  app.post("/updateCategory/:categoryId", async (req: any, res: any) => {
-    const { categoryId } = req.params;
-    const name = req.body.name;
-    const image = req.file?.filename;
+  app.post(
+    "/updateCategory/:categoryId",
+    async (req: Request, res: Response) => {
+      const { categoryId } = req.params;
+      const name = req.body.name;
+      const image = req.file?.filename;
 
-    categories
-      .findById(categoryId)
-      .then(async (_res: any) => {
-        if (image) {
-          try {
-            await fs.unlink(`public/images/${_res.image}`);
-          } catch (err) {}
-        }
-        _res.image = image ?? _res.image;
+      categories
+        .findById(categoryId)
+        .then(async (_res: any) => {
+          if (image) {
+            try {
+              await fs.unlink(`public/images/${_res.image}`);
+            } catch (err) {}
+          }
+          _res.image = image ?? _res.image;
 
-        _res.name = name ?? _res.name;
-        _res.save();
-        res.send({ success: true });
-      })
-      .catch(() => {
-        res.json({ success: false });
-      });
-  });
+          _res.name = name ?? _res.name;
+          _res.save();
+          res.send({ success: true });
+        })
+        .catch(() => {
+          res.json({ success: false });
+        });
+    }
+  );
 
   app.post("/signin", requireSignin, signin); // note when going
 
