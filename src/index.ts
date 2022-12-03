@@ -59,8 +59,6 @@ mongoose
     `mongodb+srv://ali:_StrongPassword@cluster0.gogkueu.mongodb.net/Restaurant?retryWrites=true&w=majority`
   )
   .then((_) => {
-    console.log("z");
-
     app.listen(8000);
   })
   .catch((err) => {

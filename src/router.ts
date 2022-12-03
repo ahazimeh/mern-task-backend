@@ -76,7 +76,6 @@ export default function (app: core.Express) {
       const { categoryId, itemId } = req.params;
       const { itemName, itemDescription, itemPrice } = req.body;
       const image = req.file?.filename;
-      // console.log(req, res);
       categories.findById(categoryId).then((_res: any) => {
         const result = _res?.updateItem(itemId, {
           name: itemName,
