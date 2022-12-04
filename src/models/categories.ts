@@ -106,20 +106,14 @@ menuSchema.methods.reorderItems = async function (item1Id: any, item2Id: any) {
   items[index2].order = z;
   this.items = items;
   return this.save();
-  // let i;
-  // for (i = 0; i < items.length; i++) {
-  //   // @ts-ignore
-  //   if (items[i]._id.toString() === itemId) {
-  //     break;
-  //   }
-  // }
-  // items[i].name = product.name ?? items[i].name;
-  // items[i].description = product.description ?? items[i].description;
-  // items[i].image = product.image ?? items[i].image;
-  // items[i].price = product.price ?? items[i].price;
+};
 
-  this.items = items;
-  return this.save();
+menuSchema.methods.reorderCategories = async function (
+  cat1: string,
+  cat2: string
+) {
+  console.log(cat1);
+  console.log(cat2);
 };
 
 export default mongoose.model("menu", menuSchema);

@@ -112,10 +112,41 @@ export const orderCategories = async (req: Request, res: Response) => {
   const category1 = await categories.findById(cat1);
   const category2 = await categories.findById(cat2);
   console.log(category1?.order, category2?.order);
-  // category1.order = 2;
-  // category2.order = 1;
-  await categories.updateOne({ _id: cat1 }, { order: category2?.order });
-  await categories.updateOne({ _id: cat2 }, { order: category1?.order });
+  let srcOrder = category1?.order || -1;
+  let desOrder = category2?.order || -1;
+  console.log(srcOrder, desOrder);
+  if (srcOrder < desOrder) {
+    await categories
+      .updateMany(
+        {
+          order: { $gt: srcOrder, $lte: desOrder },
+        },
+        { $inc: { order: -1 } }
+      )
+      .then((res) => {
+        console.log("a", res);
+      })
+      .catch(() => {
+        console.log("b");
+      });
+    await categories.updateOne({ _id: cat1 }, { order: category2?.order });
+  } else {
+    await categories
+      .updateMany(
+        {
+          order: { $lt: srcOrder, $gte: desOrder },
+        },
+        { $inc: { order: 1 } }
+      )
+      .then((res) => {
+        console.log("a", res);
+      })
+      .catch(() => {
+        console.log("b");
+      });
+    await categories.updateOne({ _id: cat1 }, { order: category2?.order });
+  }
+  // await categories.updateOne({ _id: cat2 }, { order: category1?.order });
   return res.json({});
 };
 
