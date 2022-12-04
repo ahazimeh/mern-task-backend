@@ -11,6 +11,7 @@ import {
   getAllCategories,
   getSingleCategory,
   orderCategories,
+  orderItems,
   removeCategory,
   removeItem,
   updateCategory,
@@ -42,6 +43,7 @@ export default function (app: core.Express) {
   app.post("/updateCategory/:categoryId", updateCategory);
 
   app.post("/orderCategories/:cat1/:cat2", orderCategories);
+  app.post("/orderItems/:categoryId/:item1Id/:item2Id", orderItems);
 
   app.post("/signin", requireSignin, signin); // note when going
 

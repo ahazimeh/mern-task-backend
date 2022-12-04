@@ -92,5 +92,35 @@ menuSchema.methods.removeItem = function (itemId: any) {
   return this.save();
 };
 
+menuSchema.methods.reorderItems = async function (item1Id: any, item2Id: any) {
+  console.log(item1Id, item2Id);
+  const items = [...this.items];
+  let index1 = 0,
+    index2 = 0;
+  for (let i = 0; i < items.length; i++) {
+    if (items[i]._id == item1Id) index1 = i;
+    if (items[i]._id == item2Id) index2 = i;
+  }
+  let z = items[index1].order;
+  items[index1].order = items[index2].order;
+  items[index2].order = z;
+  this.items = items;
+  return this.save();
+  // let i;
+  // for (i = 0; i < items.length; i++) {
+  //   // @ts-ignore
+  //   if (items[i]._id.toString() === itemId) {
+  //     break;
+  //   }
+  // }
+  // items[i].name = product.name ?? items[i].name;
+  // items[i].description = product.description ?? items[i].description;
+  // items[i].image = product.image ?? items[i].image;
+  // items[i].price = product.price ?? items[i].price;
+
+  this.items = items;
+  return this.save();
+};
+
 export default mongoose.model("menu", menuSchema);
 // export default categoriesSchema;

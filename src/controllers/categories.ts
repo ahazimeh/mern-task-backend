@@ -118,3 +118,12 @@ export const orderCategories = async (req: Request, res: Response) => {
   await categories.updateOne({ _id: cat2 }, { order: category1?.order });
   return res.json({});
 };
+
+export const orderItems = async (req: Request, res: Response) => {
+  const { categoryId, item1Id, item2Id } = req.params;
+  categories.findById(categoryId).then((_res: any) => {
+    const result = _res?.reorderItems(item1Id, item2Id);
+    console.log(result);
+  });
+  return res.json({});
+};
