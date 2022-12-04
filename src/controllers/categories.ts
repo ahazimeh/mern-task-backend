@@ -28,13 +28,17 @@ export const updateCategory = async (req: Request, res: Response) => {
 };
 
 export const getAllCategories = async (_: Request, res: Response) => {
-  const menu = await categories.find();
+  const menu = await categories.find().sort([["order", "asc"]]);
   return res.send({ menu });
 };
 
 export const getSingleCategory = async (req: Request, res: Response) => {
   const { categoryId } = req.params;
   const menu = await categories.findById(categoryId);
+  //   console.log(menu?.items);
+  if (menu?.items) {
+    menu.items.sort((a, b) => (a.order > b.order ? 1 : -1));
+  }
   return res.send({ menu });
 };
 
@@ -85,7 +89,16 @@ export const updateItem = async (req: Request, res: Response) => {
 
 export const addCategory = async (req: Request, res: Response) => {
   let category;
+
+  const menu = await categories.findOne().sort("order");
+  console.log(menu?.order);
+  let order = 1;
+  if (menu?.order) {
+    order = menu?.order + 1;
+  }
+  console.log(order);
   category = await new categories({
+    order: order,
     name: req.body.name,
     image: req?.file?.filename,
   });

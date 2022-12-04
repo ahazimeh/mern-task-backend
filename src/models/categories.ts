@@ -11,6 +11,10 @@ const menuSchema = new Schema({
     type: String,
     required: true,
   },
+  order: {
+    type: Number,
+    required: true,
+  },
   items: [
     {
       name: {
@@ -28,6 +32,10 @@ const menuSchema = new Schema({
       image: {
         type: String,
         required: false,
+      },
+      order: {
+        type: Number,
+        required: true,
       },
     },
   ],
@@ -58,12 +66,17 @@ menuSchema.methods.updateItem = async function (itemId: any, product: any) {
 
 menuSchema.methods.addItem = function (product: any) {
   const items = [...this.items];
-
+  let order = 1;
+  if (items.length) {
+    for (let i = 0; i < items.length; i++)
+      if (items[i].order >= order) order = items[i].order + 1;
+  }
   items.push({
     name: product.name,
     description: product.description,
     image: product.image,
     price: product.price,
+    order,
   });
   this.items = items;
   // this.items.push(product);
