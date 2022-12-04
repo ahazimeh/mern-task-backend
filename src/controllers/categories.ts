@@ -20,7 +20,7 @@ export const updateCategory = async (req: Request, res: Response) => {
 
       _res.name = name ?? _res.name;
       _res.save();
-      res.send({ success: true });
+      res.json({ success: true });
     })
     .catch(() => {
       res.json({ success: false });
@@ -29,7 +29,7 @@ export const updateCategory = async (req: Request, res: Response) => {
 
 export const getAllCategories = async (_: Request, res: Response) => {
   const menu = await categories.find().sort([["order", "asc"]]);
-  return res.send({ menu });
+  return res.json({ menu });
 };
 
 export const getSingleCategory = async (req: Request, res: Response) => {
@@ -38,20 +38,20 @@ export const getSingleCategory = async (req: Request, res: Response) => {
   if (menu?.items) {
     menu.items.sort((a, b) => (a.order > b.order ? 1 : -1));
   }
-  return res.send({ menu });
+  return res.json({ menu });
 };
 
 export const removeCategory = (req: Request, res: Response) => {
   const { categoryId } = req.params;
   categories.remove({ _id: categoryId }).exec();
-  res.send("");
+  res.json({ success: true });
 };
 
 export const removeItem = (req: Request, res: Response) => {
   const { categoryId, itemId } = req.params;
   categories.findById(categoryId).then((_res: any) => {
     _res.removeItem(itemId);
-    res.send("");
+    res.json({ success: true });
   });
 };
 

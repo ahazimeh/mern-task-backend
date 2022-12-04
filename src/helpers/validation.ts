@@ -4,7 +4,7 @@ import { Document } from "mongoose";
 const validation = async (result: Promise<Document>, res: Response) => {
   try {
     await result;
-    return res.send({ success: true });
+    return res.json({ success: true });
   } catch (error) {
     let errors: any = {};
     Object.keys(error.errors).forEach((key) => {
