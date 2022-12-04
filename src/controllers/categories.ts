@@ -35,7 +35,6 @@ export const getAllCategories = async (_: Request, res: Response) => {
 export const getSingleCategory = async (req: Request, res: Response) => {
   const { categoryId } = req.params;
   const menu = await categories.findById(categoryId);
-  //   console.log(menu?.items);
   if (menu?.items) {
     menu.items.sort((a, b) => (a.order > b.order ? 1 : -1));
   }
@@ -116,43 +115,28 @@ export const orderCategories = async (req: Request, res: Response) => {
   let desOrder = category2?.order || -1;
   console.log(srcOrder, desOrder);
   if (srcOrder < desOrder) {
-    await categories
-      .updateMany(
-        {
-          order: { $gt: srcOrder, $lte: desOrder },
-        },
-        { $inc: { order: -1 } }
-      )
-      .then((res) => {
-        console.log("a", res);
-      })
-      .catch(() => {
-        console.log("b");
-      });
+    await categories.updateMany(
+      {
+        order: { $gt: srcOrder, $lte: desOrder },
+      },
+      { $inc: { order: -1 } }
+    );
     await categories.updateOne({ _id: cat1 }, { order: category2?.order });
   } else {
-    await categories
-      .updateMany(
-        {
-          order: { $lt: srcOrder, $gte: desOrder },
-        },
-        { $inc: { order: 1 } }
-      )
-      .then((res) => {
-        console.log("a", res);
-      })
-      .catch(() => {
-        console.log("b");
-      });
+    await categories.updateMany(
+      {
+        order: { $lt: srcOrder, $gte: desOrder },
+      },
+      { $inc: { order: 1 } }
+    );
     await categories.updateOne({ _id: cat1 }, { order: category2?.order });
   }
-  // await categories.updateOne({ _id: cat2 }, { order: category1?.order });
   return res.json({});
 };
 
 export const orderItems = async (req: Request, res: Response) => {
   const { categoryId, item1Id, item2Id } = req.params;
-  categories.findById(categoryId).then((_res: any) => {
+  await categories.findById(categoryId).then((_res: any) => {
     const result = _res?.reorderItems(item1Id, item2Id);
     console.log(result);
   });

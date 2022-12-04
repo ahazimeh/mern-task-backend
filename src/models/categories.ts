@@ -79,7 +79,6 @@ menuSchema.methods.addItem = function (product: any) {
     order,
   });
   this.items = items;
-  // this.items.push(product);
   return this.save();
 };
 menuSchema.methods.removeItem = function (itemId: any) {
@@ -93,7 +92,6 @@ menuSchema.methods.removeItem = function (itemId: any) {
 };
 
 menuSchema.methods.reorderItems = async function (item1Id: any, item2Id: any) {
-  console.log(item1Id, item2Id);
   const items = [...this.items];
   items.sort((a, b) => (a.order > b.order ? 1 : -1));
   let index1 = 0,
@@ -102,37 +100,19 @@ menuSchema.methods.reorderItems = async function (item1Id: any, item2Id: any) {
     if (items[i]._id == item1Id) index1 = i;
     if (items[i]._id == item2Id) index2 = i;
   }
-  console.log(index1, index2);
   if (index1 < index2) {
-    console.log("index", index1, index2);
     items[index1].order = items[index2].order;
     for (let k = index1 + 1; k <= index2; k++) {
-      console.log("k", k);
       items[k].order -= 1;
     }
   } else {
-    console.log("111", index1, index2);
     items[index1].order = items[index2].order;
-    console.log(index1 - 1, index1 - index2);
     for (let k = index1 - 1; k >= index2; k--) {
-      console.log("k", k);
       items[k].order += 1;
     }
   }
-  // let z = items[index1].order;
-  // items[index1].order = items[index2].order;
-  // items[index2].order = z;
   this.items = items;
   return this.save();
 };
 
-menuSchema.methods.reorderCategories = async function (
-  cat1: string,
-  cat2: string
-) {
-  console.log(cat1);
-  console.log(cat2);
-};
-
 export default mongoose.model("menu", menuSchema);
-// export default categoriesSchema;
