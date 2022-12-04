@@ -90,12 +90,10 @@ export const addCategory = async (req: Request, res: Response) => {
   let category;
 
   const menu = await categories.findOne().sort("order");
-  console.log(menu?.order);
   let order = 1;
   if (menu?.order) {
     order = menu?.order + 1;
   }
-  console.log(order);
   category = await new categories({
     order: order,
     name: req.body.name,
@@ -105,15 +103,12 @@ export const addCategory = async (req: Request, res: Response) => {
 };
 
 export const orderCategories = async (req: Request, res: Response) => {
-  console.log("a");
   const { cat1, cat2 } = req.params;
 
   const category1 = await categories.findById(cat1);
   const category2 = await categories.findById(cat2);
-  console.log(category1?.order, category2?.order);
   let srcOrder = category1?.order || -1;
   let desOrder = category2?.order || -1;
-  console.log(srcOrder, desOrder);
   if (srcOrder < desOrder) {
     await categories.updateMany(
       {
@@ -131,14 +126,13 @@ export const orderCategories = async (req: Request, res: Response) => {
     );
     await categories.updateOne({ _id: cat1 }, { order: category2?.order });
   }
-  return res.json({});
+  return res.json({ success: true });
 };
 
 export const orderItems = async (req: Request, res: Response) => {
   const { categoryId, item1Id, item2Id } = req.params;
   await categories.findById(categoryId).then((_res: any) => {
     const result = _res?.reorderItems(item1Id, item2Id);
-    console.log(result);
   });
-  return res.json({});
+  return res.json({ success: true });
 };

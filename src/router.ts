@@ -38,9 +38,9 @@ export default function (app: core.Express) {
 
   app.post("/addCategory", requireAuth, addCategory);
 
-  app.post("/updateItem/:categoryId/:itemId", requireAuth, updateItem);
+  app.put("/updateItem/:categoryId/:itemId", requireAuth, updateItem);
 
-  app.post("/updateCategory/:categoryId", requireAuth, updateCategory);
+  app.put("/updateCategory/:categoryId", requireAuth, updateCategory);
 
   app.post("/orderCategories/:cat1/:cat2", requireAuth, orderCategories);
   app.post(
