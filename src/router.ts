@@ -30,20 +30,24 @@ export default function (app: core.Express) {
 
   app.get("/categories/:categoryId", getSingleCategory);
 
-  app.delete("/removeCategory/:categoryId", removeCategory);
+  app.delete("/removeCategory/:categoryId", requireAuth, removeCategory);
 
-  app.delete("/removeItem/:categoryId/:itemId", removeItem);
+  app.delete("/removeItem/:categoryId/:itemId", requireAuth, removeItem);
 
-  app.post("/addItem/:categoryId", addItem);
+  app.post("/addItem/:categoryId", requireAuth, addItem);
 
-  app.post("/addCategory", addCategory);
+  app.post("/addCategory", requireAuth, addCategory);
 
-  app.post("/updateItem/:categoryId/:itemId", updateItem);
+  app.post("/updateItem/:categoryId/:itemId", requireAuth, updateItem);
 
-  app.post("/updateCategory/:categoryId", updateCategory);
+  app.post("/updateCategory/:categoryId", requireAuth, updateCategory);
 
-  app.post("/orderCategories/:cat1/:cat2", orderCategories);
-  app.post("/orderItems/:categoryId/:item1Id/:item2Id", orderItems);
+  app.post("/orderCategories/:cat1/:cat2", requireAuth, orderCategories);
+  app.post(
+    "/orderItems/:categoryId/:item1Id/:item2Id",
+    requireAuth,
+    orderItems
+  );
 
   app.post("/signin", requireSignin, signin); // note when going
 
