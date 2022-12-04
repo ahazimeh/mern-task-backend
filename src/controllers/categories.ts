@@ -104,3 +104,17 @@ export const addCategory = async (req: Request, res: Response) => {
   });
   return validation(category.save(), res);
 };
+
+export const orderCategories = async (req: Request, res: Response) => {
+  console.log("a");
+  const { cat1, cat2 } = req.params;
+
+  const category1 = await categories.findById(cat1);
+  const category2 = await categories.findById(cat2);
+  console.log(category1?.order, category2?.order);
+  // category1.order = 2;
+  // category2.order = 1;
+  await categories.updateOne({ _id: cat1 }, { order: category2?.order });
+  await categories.updateOne({ _id: cat2 }, { order: category1?.order });
+  return res.json({});
+};
