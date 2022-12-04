@@ -29,7 +29,7 @@ export const updateCategory = async (req: Request, res: Response) => {
 
 export const getAllCategories = async (_: Request, res: Response) => {
   const menu = await categories.find().sort([["order", "asc"]]);
-  return res.json({ menu });
+  return res.json({ success: true, menu });
 };
 
 export const getSingleCategory = async (req: Request, res: Response) => {
@@ -38,7 +38,7 @@ export const getSingleCategory = async (req: Request, res: Response) => {
   if (menu?.items) {
     menu.items.sort((a, b) => (a.order > b.order ? 1 : -1));
   }
-  return res.json({ menu });
+  return res.json({ success: true, menu });
 };
 
 export const removeCategory = (req: Request, res: Response) => {
