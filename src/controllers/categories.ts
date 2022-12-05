@@ -133,6 +133,7 @@ export const orderItems = async (req: Request, res: Response) => {
   const { categoryId, item1Id, item2Id } = req.params;
   await categories.findById(categoryId).then((_res: any) => {
     const result = _res?.reorderItems(item1Id, item2Id);
+    console.log(result);
   });
   return res.json({ success: true });
 };
